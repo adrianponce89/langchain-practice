@@ -3,6 +3,13 @@ from dotenv import load_dotenv
 from langchain.llms import OpenAI
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
+import argparse
+
+# Parse command line arguments
+parser = argparse.ArgumentParser()
+parser.add_argument("--language", type=str, help="Programming language", default="Python")
+parser.add_argument("--task", type=str, help="Task to perform", default="print 'Hello, World!'")
+args = parser.parse_args()
 
 # Load environment variables from .env file
 load_dotenv()
@@ -25,8 +32,8 @@ code_chain = LLMChain(
 )
 
 result = code_chain({
-  "language": "Python",
-  "task": "print 'Hello, World!'"
+  "language": args.language,
+  "task": args.task
 })
 
-print(result)
+print(result["text"])
