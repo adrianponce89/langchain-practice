@@ -4,23 +4,33 @@ from langchain.prompts import (
   HumanMessagePromptTemplate,
   MessagesPlaceholder
 )
+from langchain.schema import SystemMessage
 from langchain.agents import OpenAIFunctionsAgent, AgentExecutor
 from dotenv import load_dotenv
 
-from tools.slq import run_query_tool
+from tools.slq import run_query_tool, list_tables, describe_tables_tool
 
 load_dotenv()
 
 chat = ChatOpenAI()
 
+tables = list_tables()
+
+
 chat_prompt = ChatPromptTemplate(
   messages=[
+    SystemMessage(content=(
+      "You are an AI that have access to a SQLite database.\n"
+      f"The database contains the following tables: {tables}\n"
+      "Do not make any assumptions about the schema of the tables. "
+      "Intead, use the 'describe_tables' tool to get the schema of a table.\n"
+      )),
     HumanMessagePromptTemplate.from_template("{input}"),
     MessagesPlaceholder(variable_name="agent_scratchpad")
   ]
 )
 
-tools = [run_query_tool]
+tools = [run_query_tool, describe_tables_tool]
 
 agent = OpenAIFunctionsAgent(
   llm=chat,
@@ -34,4 +44,4 @@ agent_executor = AgentExecutor(
   tools=tools
 )
 
-agent_executor("What are the names of the first 5 users?")
+agent_executor("How many users have provided their shiping address?")
