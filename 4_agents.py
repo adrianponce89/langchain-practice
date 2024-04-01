@@ -9,6 +9,7 @@ from langchain.agents import OpenAIFunctionsAgent, AgentExecutor
 from dotenv import load_dotenv
 
 from tools.slq import run_query_tool, list_tables, describe_tables_tool
+from tools.report import write_report_tool
 
 load_dotenv()
 
@@ -30,7 +31,11 @@ chat_prompt = ChatPromptTemplate(
   ]
 )
 
-tools = [run_query_tool, describe_tables_tool]
+tools = [
+  run_query_tool,
+  describe_tables_tool,
+  write_report_tool
+]
 
 agent = OpenAIFunctionsAgent(
   llm=chat,
@@ -44,4 +49,5 @@ agent_executor = AgentExecutor(
   tools=tools
 )
 
-agent_executor("How many users have provided their shiping address?")
+#agent_executor("How many users have provided their shiping address?")
+agent_executor("Summarize the top 5 most popular products with their names. Write the report to 'top_products.html'")
