@@ -59,5 +59,9 @@ agent_executor = AgentExecutor(
 
 # agent_executor("How many users have provided their shiping address?")
 # agent_executor("Summarize the top 5 most popular products with their names. Write the report to 'top_products.html'")
-agent_executor("How many orders there are?")
-agent_executor("Repeat the same procces for users")
+# agent_executor("How many orders there are?")
+# agent_executor("Repeat the same procces for users")
+
+while True:
+  content = input(">> ")
+  agent_executor(content)
