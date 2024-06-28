@@ -11,10 +11,15 @@ from dotenv import load_dotenv
 
 from tools.slq import run_query_tool, list_tables, describe_tables_tool
 from tools.report import write_report_tool
+from handlers.chat_model_start_handler import ChatModelStartHandler
 
 load_dotenv()
 
-chat = ChatOpenAI()
+handler = ChatModelStartHandler()
+
+chat = ChatOpenAI(
+  callbacks=[handler]
+)
 
 tables = list_tables()
 
@@ -52,16 +57,16 @@ agent = OpenAIFunctionsAgent(
 
 agent_executor = AgentExecutor(
   agent=agent,
-  verbose=True,
+  # verbose=True,
   tools=tools,
   memory=memory
 )
 
 # agent_executor("How many users have provided their shiping address?")
 # agent_executor("Summarize the top 5 most popular products with their names. Write the report to 'top_products.html'")
-# agent_executor("How many orders there are?")
+agent_executor("How many orders there are?")
 # agent_executor("Repeat the same procces for users")
 
-while True:
-  content = input(">> ")
-  agent_executor(content)
+# while True:
+#   content = input(">> ")
+#   agent_executor(content)
